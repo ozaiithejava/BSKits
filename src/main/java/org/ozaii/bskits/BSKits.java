@@ -6,6 +6,8 @@ import org.ozaii.bskits.dao.KitDao;
 import org.ozaii.bskits.dao.KitItemDao;
 import org.ozaii.bskits.database.Database;
 import org.ozaii.bskits.services.KitService;
+import org.ozaii.bskits.services.ServiceRegistry;
+
 import java.sql.SQLException;
 
 public final class BSKits extends JavaPlugin {
@@ -28,6 +30,7 @@ public final class BSKits extends JavaPlugin {
         try {
             connectDatabase("database");
             setupServices();
+            ServiceRegistry.registerService(KitService.class, kitService);
             getCommand("kit").setExecutor(new KitCommand(kitService));
             getLogger().info("BSKits başarıyla aktif edildi!");
         } catch (Exception e) {
