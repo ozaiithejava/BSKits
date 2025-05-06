@@ -1,6 +1,8 @@
 package org.ozaii.bskits.services;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.ozaii.bskits.BSKits;
 import org.ozaii.bskits.dao.KitDao;
 import org.ozaii.bskits.dao.KitItemDao;
 import org.ozaii.bskits.models.Kit;
@@ -24,6 +26,10 @@ public class KitService {
         this.kitItemDao = kitItemDao;
     }
 
+    private JavaPlugin getPlugin() {
+        return BSKits.getInstance();
+    }
+
     // Double-checked singleton
     public static KitService getInstance(KitDao kitDao, KitItemDao kitItemDao) {
         if (instance == null) {
@@ -37,7 +43,7 @@ public class KitService {
     }
 
     public void createKit(String name, UUID creator, List<ItemStack> items) throws SQLException {
-       /* controller */
+        /* controller */
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Kit adı boş olamaz.");
         }
@@ -45,27 +51,20 @@ public class KitService {
             throw new IllegalArgumentException("Kit oluşturucusu boş olamaz.");
         }
 
-        /* eğer istersen bu yorum satırlarını kaldır  */
-//        if (items == null || items.isEmpty()) {
-//            throw new IllegalArgumentException("Kit öğeleri boş olamaz.");
-//        }
-
         Kit kit = new Kit(name, creator);
         kitDao.createKit(kit);
-        System.out.println("Kit başarıyla oluşturuldu: " + name);
+        getPlugin().getLogger().info("Kit başarıyla oluşturuldu: " + name);
 
         for (ItemStack item : items) {
             if (item == null || item.getType().isAir()) {
-               // System.out.println("Geçersiz veya boş item atlandı.");
-                continue;
+                continue;  // Geçersiz veya boş item atlanacak
             }
 
             KitItem kitItem = new KitItem(kit, item, item.getAmount());
             kitItemDao.addItemToKit(kitItem);
-            System.out.println("Kit öğesi başarıyla eklendi: " + item.getType().name());
+            getPlugin().getLogger().info("Kit öğesi başarıyla eklendi: " + item.getType().name());
         }
     }
-
 
     public List<ItemStack> getKitContents(String kitName) throws SQLException {
         Kit kit = kitDao.findByName(kitName);
@@ -91,29 +90,38 @@ public class KitService {
         return kitDao.findAll();
     }
 
-    public boolean updateKit(Kit oldkit,Kit newkit) throws SQLException {
+    public boolean updateKit(Kit oldkit, Kit newkit) throws SQLException {
         Kit lastKit = kitDao.findByName(oldkit.getName());
         if (lastKit != null) {
             lastKit.setId(newkit.getId());
             lastKit.setName(newkit.getName());
             lastKit.setCreatedAt(newkit.getCreatedAt());
             kitDao.updateKit(lastKit);
+            getPlugin().getLogger().info("Kit başarıyla güncellendi: " + oldkit.getName() + " -> " + newkit.getName());
             return true;
         }
         return false;
     }
 
     public boolean removeKit(Kit kit) throws SQLException {
-            return kitDao.deleteKit(kit);
+        boolean success = kitDao.deleteKit(kit);
+        if (success) {
+            getPlugin().getLogger().info("Kit başarıyla silindi: " + kit.getName());
+        } else {
+            getPlugin().getLogger().severe("Kit silme işlemi sırasında hata oluştu: " + kit.getName());
+        }
+        return success;
     }
 
     public List<ItemStack> getKitItemsByKitName(String kitName) throws SQLException {
         Kit kit = kitDao.getKitByName(kitName);
         if (kit == null) {
+            getPlugin().getLogger().warning("Kit bulunamadı: " + kitName);
             return new ArrayList<>();
         }
 
         return kitItemDao.getItemsForKit(kit.getId());
     }
+
 
 }
