@@ -2,6 +2,7 @@ package org.ozaii.bskits;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ozaii.bskits.command.KitCommand;
+import org.ozaii.bskits.command.KitCommandTabCompleter;
 import org.ozaii.bskits.dao.KitDao;
 import org.ozaii.bskits.dao.KitItemDao;
 import org.ozaii.bskits.database.Database;
@@ -31,6 +32,7 @@ public final class BSKits extends JavaPlugin {
             connectDatabase("database");
             setupServices();
             getCommand("kit").setExecutor(new KitCommand(kitService));
+            getCommand("kit").setTabCompleter(new KitCommandTabCompleter(kitService));
             getServer().getPluginManager().registerEvents(new KitGuiListener(kitService), this);
             getLogger().info("BSKits başarıyla aktif edildi!");
         } catch (Exception e) {

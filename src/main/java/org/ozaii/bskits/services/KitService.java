@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class KitService {
 
@@ -57,7 +58,7 @@ public class KitService {
 
         for (ItemStack item : items) {
             if (item == null || item.getType().isAir()) {
-                continue;  // Geçersiz veya boş item atlanacak
+                continue;  // bypass
             }
 
             KitItem kitItem = new KitItem(kit, item, item.getAmount());
@@ -88,6 +89,12 @@ public class KitService {
 
     public List<Kit> getAllKits() throws SQLException {
         return kitDao.findAll();
+    }
+    public List<String> getAllKitNames() throws SQLException {
+        List<Kit> kits = kitDao.findAll();
+        return kits.stream()
+                .map(Kit::getName)
+                .collect(Collectors.toList());
     }
 
     public boolean updateKit(Kit oldkit, Kit newkit) throws SQLException {

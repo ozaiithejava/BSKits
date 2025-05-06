@@ -7,6 +7,7 @@ description: Minecraft sunucunuz için gelişmiş kit sistemi
 commands:
   kit:
     description: Kit yönetim komutları
+    tab-completer: org.ozaii.bskits.command.KitCommandTabCompleter
     aliases: [kits]
     permissions:
       kit.use:

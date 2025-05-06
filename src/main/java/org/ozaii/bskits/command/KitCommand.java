@@ -153,8 +153,8 @@ public class KitCommand implements CommandExecutor {
         }
 
         if (newItems.isEmpty()) {
-            player.sendMessage("§cKit için en az bir eşya seçmelisiniz.");
-            return false;
+            newItems =  kitService.getKitContents(oldKitName);
+            player.sendMessage("§eYeni kit için eşya seti boş. Eski kitin eşyaları kullanılacak.");
         }
 
         kitService.removeKit(oldKit);
@@ -163,6 +163,7 @@ public class KitCommand implements CommandExecutor {
         player.sendMessage("§aKit başarıyla güncellendi: " + oldKitName + " -> " + newKitName);
         return true;
     }
+
 
 
     private boolean handleListKits(Player player) throws SQLException {

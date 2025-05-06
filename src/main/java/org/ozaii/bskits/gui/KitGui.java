@@ -12,6 +12,8 @@ import org.ozaii.bskits.models.Kit;
 import org.ozaii.bskits.services.KitService;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class KitGui {
@@ -35,12 +37,14 @@ public class KitGui {
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
                 meta.setDisplayName("§a" + kit.getName());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String formattedDate = sdf.format(new Date(kit.getCreatedAt()));
+
                 meta.setLore(List.of(
-                        "§7Oluşturan: §e" + Bukkit.getPlayer(kit.getCreatedBy()).getPlayer().getDisplayName(),
-                        "§7Eşya Sayısı: §e" + kitService.getKitContents(kit.getName()).size(),
-                        "§7Kit Adı: §e" + kit.getName(),
-                        "§c almak için : sağ | §e bakamak için sol §cTıkla!"
+                        "§x§7§3§5§1§9Eşya Sayısı: §x§e§1§5§8§9" + kitService.getKitContents(kit.getName()).size() + "  §x§7§1§5§5|  §x§e§3§5§8Kit Adı: §x§6§4§0§1" + kit.getName(),
+                        "§x§7§3§1§5§6Kit Oluşturulma Tarihi: §x§b§0§5§6§d" + formattedDate + "  §x§7§3§0§8|  §x§c§3§5Almak için sol tıkla  §x§7§6§0|  §x§e§3§0Bakmak için sağ tıkla!"
                 ));
+
                 meta.getPersistentDataContainer().set(new NamespacedKey("bskits", "kit_name"), PersistentDataType.STRING, kit.getName());
                 item.setItemMeta(meta);
             }
