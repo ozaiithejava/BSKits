@@ -24,14 +24,12 @@ public class KitService {
         this.kitItemDao = kitItemDao;
     }
 
-    // ServiceRegistery
+    // Double-checked singleton
     public static KitService getInstance(KitDao kitDao, KitItemDao kitItemDao) {
         if (instance == null) {
             synchronized (KitService.class) {
                 if (instance == null) {
                     instance = new KitService(kitDao, kitItemDao);
-                    // Singleton instance kaydediliyor
-                    ServiceRegistry.registerService(KitService.class, instance);
                 }
             }
         }
