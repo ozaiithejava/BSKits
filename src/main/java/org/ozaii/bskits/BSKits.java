@@ -1,7 +1,7 @@
 package org.ozaii.bskits;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.ozaii.bskits.bukkit.KitCommand;
+import org.ozaii.bskits.command.KitCommand;
 import org.ozaii.bskits.dao.KitDao;
 import org.ozaii.bskits.dao.KitItemDao;
 import org.ozaii.bskits.database.Database;
