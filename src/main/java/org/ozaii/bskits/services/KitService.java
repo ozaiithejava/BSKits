@@ -104,12 +104,7 @@ public class KitService {
     }
 
     public boolean removeKit(Kit kit) throws SQLException {
-        if (kitDao.findByName(kit.getName()) != null) {
-            kitDao.deleteKit(kit);
-            return true;
-        }else {
-            return false;
-        }
+            return kitDao.deleteKit(kit);
     }
 
     public List<ItemStack> getKitItemsByKitName(String kitName) throws SQLException {

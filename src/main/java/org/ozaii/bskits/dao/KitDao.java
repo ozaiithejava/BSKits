@@ -29,8 +29,12 @@ public class KitDao {
         return kitDao.queryForAll();
     }
 
-    public void deleteKit(Kit kit) throws SQLException {
-        kitDao.delete(kit);
+//    public void deleteKit(Kit kit) throws SQLException {
+//        kitDao.delete(kit);
+//    }
+
+    public boolean deleteKit(Kit kit) throws SQLException {
+        return kitDao.delete(kit) != 0;
     }
 
     /* eğer istersen burayı daha kapsamlı yapabilirsin. */
