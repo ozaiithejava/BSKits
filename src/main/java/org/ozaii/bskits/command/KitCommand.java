@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.ozaii.bskits.gui.KitGui;
 import org.ozaii.bskits.models.Kit;
 import org.ozaii.bskits.services.KitService;
 
@@ -15,9 +16,11 @@ import java.util.List;
 public class KitCommand implements CommandExecutor {
 
     private final KitService kitService;
+    private final KitGui kitGui;
 
     public KitCommand(KitService kitService) {
         this.kitService = kitService;
+        this.kitGui = new KitGui(kitService);
     }
 
     @Override
@@ -51,7 +54,9 @@ public class KitCommand implements CommandExecutor {
                 case "update":
                     return handleUpdateKit(player, args);
                 case "list":
-                    return handleListKits(player);
+                  //  return handleListKits(player);
+                    kitGui.openKitListGui(player);
+                    return true;
                 case "give":
                     return handleGiveKit(player, args);
                 default:
